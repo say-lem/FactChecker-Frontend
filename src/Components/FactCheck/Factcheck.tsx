@@ -1,5 +1,5 @@
 import { FaLink } from "react-icons/fa";
-// import hero from "../../assets/herobg.png"
+import hero from "../../assets/herobg.png"
 
 const HeroSection = () => {
   return (
@@ -7,13 +7,11 @@ const HeroSection = () => {
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: "../../assets/herobg.png", // replace with your image path
-        }}
+        style={{ backgroundImage: `url(${hero})` }}
       />
 
       {/* Color Overlay */}
-      <div className="absolute inset-0 bg-[#121858]/90" />
+      <div className="absolute inset-0 bg-[#121858]/80" />
 
       {/* Content */}
       <div className="relative z-10 text-center max-w-2xl w-full">
