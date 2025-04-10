@@ -11,9 +11,9 @@ export const Navbar = () => {
 
   const navLinks = [
     { label: "Fact Check", path: "/" },
-    { label: "Trending", path: "/about" },
-    { label: "Contact Us", path: "/services" },
-    { label: "Contact", path: "/contact" },
+    { label: "Trending", path: "/trending" },
+    { label: "Contact Us", path: "/contact-us" },
+    // { label: "Contact", path: "/contact" },
   ];
 
   return (
@@ -39,10 +39,10 @@ export const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-3">
-            <button className="bg-[#333FE88A] p-3 rounded-[8px] text-white">
+            <button className="bg-[#333FE88A] p-3 rounded-[8px] text-white hidden md:flex">
                 Get Premium
             </button>
-            <button className=" border border-[#333FE88A] flex items-center gap-2 p-3 rounded-[8px] text-[#333FE88A]">
+            <button className=" border border-[#333FE88A] md:flex items-center gap-2 p-3 rounded-[8px] text-[#333FE88A] hidden ">
                 <span>Language</span> <IoIosArrowDown className="w-5 h-5"/>
             </button>
         </div>

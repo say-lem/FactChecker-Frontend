@@ -4,16 +4,14 @@ import hero from "../../assets/herobg.png"
 const HeroSection = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center text-white px-4">
-      {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${hero})` }}
       />
 
-      {/* Color Overlay */}
       <div className="absolute inset-0 bg-[#121858]/80" />
 
-      {/* Content */}
+      
       <div className="relative z-10 text-center max-w-2xl w-full">
         <h1 className="text-4xl md:text-5xl font-bold mb-4">
           Truth<span className="text-green-400">Check</span>
