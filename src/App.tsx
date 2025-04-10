@@ -1,13 +1,16 @@
-import './App.css'
+import HeroSection from "./Components/FactCheck/Factcheck";
+import { Navbar } from "./Components/Navbar/Navbar";
+
 
 function App() {
-  
-
   return (
     <div>
-      <p className='text-red-500'>truthchecker</p>
+      <Navbar />
+      <div className="pt-16"> 
+       <HeroSection />
+      </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
