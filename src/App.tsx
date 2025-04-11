@@ -1,13 +1,19 @@
-import HeroSection from "./Components/FactCheck/Factcheck";
+import { Route, Routes } from "react-router-dom";
 import { Navbar } from "./Components/Navbar/Navbar";
+import { CheckDetail, FactCheck } from "./Pages";
 
 
 function App() {
   return (
     <div>
-      <Navbar />
+     
       <div className="pt-16"> 
-       <HeroSection />
+      <Navbar />
+      <Routes>
+          <Route path="/" element={<div> <FactCheck/></div>} />
+          <Route path="/checkdetail" element={<div> <CheckDetail/></div>} />
+        </Routes>
+       
       </div>
     </div>
   );
