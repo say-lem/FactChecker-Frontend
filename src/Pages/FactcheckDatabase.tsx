@@ -14,14 +14,12 @@ export const FactCheckDatabase: FC<CheckDetailsProps> = ({ onBack }) => {
     {
       user: "Divine",
       time: "12 hours",
-      title:
-        "Old video of Emir asking herders to exit Taraba resurfaces online",
       description:
         "An X user, Dr Crocs (@MgajilInnocent), posted the video with a caption that Abbas Tafida, the Emir of Muri kingdom in Taraba State...",
-      link: "https://www.tagesschau.de/wirtschaft/verbraucher/adac-pannenstatistiks-elektr...",
       likes: 1200,
       shares: 123,
       comments: 550,
+      verdict: "false"
     },
   ];
 
@@ -34,7 +32,7 @@ export const FactCheckDatabase: FC<CheckDetailsProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center h-[calc(100vh-64px)] overflow-hidden">
        <div
         className="absolute inset-0 bg-cover bg-center "
         style={{ backgroundImage: `url(${hero})` }}
@@ -42,13 +40,13 @@ export const FactCheckDatabase: FC<CheckDetailsProps> = ({ onBack }) => {
       <div className="absolute inset-0 bg-[#121858]/80" />
       <div className="min-h-screen bg-gradient-to-b max-w-7xl  px-4 py-8 container ">
         <div
-          className="flex items-center absolute text-white gap-2 cursor-pointer mb-6 md:mb-[70px] hover:text-gray-200"
+          className="flex items-center absolute text-white gap-2 mt-16 cursor-pointer mb-6 md:mb-[70px] hover:text-gray-200"
           onClick={handleBack}
         >
-          <FaArrowLeft />
+          <FaArrowLeft className="hidden md:block" />
           <span>Back</span>
         </div>
-      <div className="flex flex-col items-center mt-36">
+        <div className="flex flex-col items-center mt-36 border border-red-500 h-[800px] overflow-hidden overflow-y-scroll mb-11">
         {facts.map((fact, index) => (
           <FactCheckCard key={index} {...fact} />
         ))}

@@ -39,19 +39,18 @@ export interface ClaimReview {
 
 interface QueryState {
   data: QueryResponse | null;
-  allQueries: QueryResponse[]; // <-- NEW
+  allQueries: QueryResponse[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: QueryState = {
   data: null,
-  allQueries: [], // <-- NEW
+  allQueries: [],
   loading: false,
   error: null,
 };
 
-// ✅ POST a single query (authenticated)
 export const postQuery = createAsyncThunk(
   'query/postQuery',
   async (payload: { text: string }, thunkAPI) => {
@@ -75,7 +74,6 @@ export const postQuery = createAsyncThunk(
   }
 );
 
-// ✅ GET all queries (no auth required)
 export const fetchAllQueries = createAsyncThunk(
   'query/fetchAllQueries',
   async (_, thunkAPI) => {
@@ -101,7 +99,7 @@ const querySlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      // 🔹 POST Query
+      // POST Query
       .addCase(postQuery.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -115,7 +113,7 @@ const querySlice = createSlice({
         state.error = action.payload;
       })
 
-      // 🔹 FETCH All Queries
+      // FETCH All Queries
       .addCase(fetchAllQueries.pending, (state) => {
         state.loading = true;
         state.error = null;
