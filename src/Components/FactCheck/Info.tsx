@@ -137,7 +137,7 @@ const CheckDetails = () => {
           </button>
         </div>
 
-        <div className="mt-16 max-h-[550px] overflow-hidden overflow-y-scroll">
+        <div className="mt-16 max-h-[550px] overflow-hidden overflow-y-scroll hide-scrollbar">
           {verdictFromApi.length === 0 ? (
             <p>No claims found for this query.</p>
           ) : (
