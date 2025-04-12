@@ -1,4 +1,6 @@
 import React from "react";
+import { LuThumbsUp, LuThumbsDown } from "react-icons/lu";
+import { FaRegCommentDots } from "react-icons/fa6";
 
 interface FactCheckCardProps {
   user: string;
@@ -22,13 +24,14 @@ const FactCheckCard: React.FC<FactCheckCardProps> = ({
   comments,
 }) => {
   return (
-    <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 mb-6 shadow-md w-full max-w-3xl">
+    <div className="bg-white backdrop-blur-md rounded-xl md:px-11 p-4 mb-6 shadow-md w-full max-w-3xl">
+     
       <div className="text-sm text-blue-400 flex items-center gap-2 mb-2">
-        <span className="font-semibold">{user}</span>•
-        <span className="text-gray-300">{time} ago</span>
+        <span className="font-semibold">{user}</span>
+        <span className="text-[#080B38]">{time} ago</span>
       </div>
-      <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
-      <p className="text-gray-300 text-sm mb-2">{description}</p>
+      <h3 className="text-lg font-semibold mb-2">{title}</h3>
+      <p className=" text-sm mb-2">{description}</p>
       <a
         href={link}
         className="text-blue-300 underline text-sm break-all"
@@ -37,10 +40,22 @@ const FactCheckCard: React.FC<FactCheckCardProps> = ({
       >
         {link}
       </a>
-      <div className="flex items-center gap-4 mt-4 text-sm text-white/80">
-        <span>👍 {likes.toLocaleString()}</span>
-        <span>🔁 {shares.toLocaleString()}</span>
-        <span>💬 {comments.toLocaleString()}</span>
+      <div className="flex items-center gap-4 mt-4 text-sm">
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1">
+            <LuThumbsUp />
+            <span>{likes}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <LuThumbsDown />
+            <span>{shares}</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <FaRegCommentDots className="scale-x-[-1]" />
+          <span>{comments}</span>
+        </div>
       </div>
     </div>
   );

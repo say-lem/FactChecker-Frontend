@@ -1,19 +1,16 @@
-import { useEffect, useState } from "react";
+
+
+
+import React from "react";
 import logo from "../../assets/Asset 1@4x 1.png";
 
-const AnalyzingModal = () => {
-  const [progress, setProgress] = useState(0);
+export interface AnalyzingModalProps {
+  isVisible: boolean;
+  progress: number;
+}
 
-  useEffect(() => {
-    let start = 0;
-    const interval = setInterval(() => {
-      start += 1;
-      setProgress(start);
-      if (start >= 100) clearInterval(interval);
-    }, 40); 
-
-    return () => clearInterval(interval); 
-  }, []);
+const AnalyzingModal: React.FC<AnalyzingModalProps> = ({ isVisible, progress }) => {
+  if (!isVisible) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
@@ -43,3 +40,4 @@ const AnalyzingModal = () => {
 };
 
 export default AnalyzingModal;
+
