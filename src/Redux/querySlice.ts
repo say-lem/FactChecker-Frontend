@@ -2,10 +2,18 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export interface QueryResponse {
-  userId: string;
-  text: string;
-  verdictFromApi: Verdict[];
-}
+    _id: string;
+    userId: {
+      username: string;
+    };
+    text: string;
+    verdictFromApi: Verdict[];
+    upvotes: number;
+    downvotes: number;
+    commentCount: number;
+    createdAt: string;
+  }
+  
 
 export interface Verdict {
   verdict: 'positive' | 'negative' | 'neutral' | 'unverified';
