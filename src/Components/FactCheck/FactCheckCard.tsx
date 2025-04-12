@@ -41,7 +41,7 @@ const FactCheckCard: React.FC<FactCheckCardProps> = ({
         {link}
       </a>
       <div className="flex items-center gap-4 mt-4 text-sm">
-        <div className="flex items-center gap-4 mt-4 text-sm">
+        <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1">
             <LuThumbsUp />
             <span>{likes}</span>
