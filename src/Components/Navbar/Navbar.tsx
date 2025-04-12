@@ -1,13 +1,32 @@
 import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/Asset 1@4x 1.png";
 import { navLinks } from "../Shared/constant";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../Redux/store";
+import { logout } from "../../Redux/authSlice";
 
 export const Navbar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const handleAuthClick = () => {
+    if (user) {
+      dispatch(logout());
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
+
+  const hideNavbarPaths = ["/login", "/signup"];
+  if (hideNavbarPaths.includes(location.pathname)) return null;
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 z-50 flex items-center justify-center">
@@ -18,13 +37,13 @@ export const Navbar = () => {
             <p className="text-[#181D6B]">TruthCheck</p>
           </div>
 
-          <div className="hidden md:flex gap-6">
+          <div className="hidden md:flex gap-6 items-center">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.path}
-                className={`text-gray-700 text-center flex itemc hover:text-[#333FE88A] transition ${
-                  location.pathname === link.path ? "text-blue-600" : ""
+                className={` hover:text-[#333FE88A] transition ${
+                  location.pathname === link.path ? "text-blue-600" : "text-gray-700"
                 }`}
               >
                 {link.label}
@@ -47,8 +66,11 @@ export const Navbar = () => {
             <button className="bg-[#333FE88A] p-3 rounded-[8px] text-white hidden md:flex">
               Get Premium
             </button>
-            <button className="border border-[#333FE88A] md:flex items-center gap-2 p-3 rounded-[8px] text-[#333FE88A] hidden">
-              Login
+            <button
+              onClick={handleAuthClick}
+              className="border border-[#333FE88A] md:flex items-center gap-2 p-3 rounded-[8px] text-[#333FE88A] hidden"
+            >
+              {user ? "Logout" : "Login"}
             </button>
           </div>
 
@@ -66,14 +88,23 @@ export const Navbar = () => {
               <Link
                 key={link.label}
                 to={link.path}
-                className={`block py-2 text-gray-700 hover:text-blue-600 transition ${
-                  location.pathname === link.path ? "text-red-500" : ""
+                className={`block py-2  hover:text-blue-600 transition ${
+                  location.pathname === link.path ? "text-blue-600" : "text-gray-700"
                 }`}
                 onClick={() => setIsOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                handleAuthClick();
+              }}
+              className="w-full mt-2 text-left text-[#333FE88A] font-medium"
+            >
+              {user ? "Logout" : "Login"}
+            </button>
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { Navbar } from "./Components/Navbar/Navbar";
-import { CheckDetail, FactCheck } from "./Pages";
+import { CheckDetail, FactCheck, Login, Signup, FactCheckDatabase } from "./Pages";
 
 
 function App() {
@@ -12,8 +12,17 @@ function App() {
       <Routes>
           <Route path="/" element={<div> <FactCheck/></div>} />
           <Route path="/checkdetail" element={<div> <CheckDetail/></div>} />
+          <Route
+            path="/factcheck-database"
+            element={
+              <div>
+                <FactCheckDatabase />
+              </div>
+            }
+          />
+          <Route path="/signup" element={<div> <Signup/></div>} />
+          <Route path="/login" element={<div> <Login/></div>} />
         </Routes>
-       
       </div>
     </div>
   );
