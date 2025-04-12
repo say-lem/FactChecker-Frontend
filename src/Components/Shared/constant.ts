@@ -1,6 +1,6 @@
 export const navLinks = [
   { label: "Fact Check", path: "/" },
-  { label: "Trending", path: "/trending" },
+//   { label: "Trending", path: "/trending" },
   { label: "Fact check Database", path: "/factcheck-database" },
 ];
 
