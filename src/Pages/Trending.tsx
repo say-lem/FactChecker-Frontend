@@ -1,4 +1,4 @@
-//import React from "react";
+import hero from "../assets/herobg.png";
 
 const trendingData = [
   {
@@ -27,18 +27,24 @@ const trendingData = [
   },
 ];
 
+
 const Trending = () => {
   return (
-    <div className="min-h-screen bg-gray-100 px-4 py-10">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-center text-[#181D6B]">
-          Trending Claims
-        </h1>
+    <div className="flex items-center justify-center min-h-screen relative">
+      {/* Background layers */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: `url(${hero})` }}
+      />
+      <div className="absolute inset-0 bg-[#121858]/80" />
+      
+      {/* Content container */}
+      <div className="min-h-screen bg-gradient-to-b max-w-7xl px-4 py-8 container relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {trendingData.map((item) => (
             <div
               key={item.id}
-              className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow"
+              className="bg-white shadow-md rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-cyan-500/20"
             >
               <img
                 src={item.image}
