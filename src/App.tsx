@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { Navbar } from "./Components/Navbar/Navbar";
-import { CheckDetail, FactCheck, Login, Signup } from "./Pages";
-import FactCheckDatabase from "./Pages/FactcheckDatabase";
+import { CheckDetail, FactCheck, Login, Signup, FactCheckDatabase } from "./Pages";
 
 
 function App() {

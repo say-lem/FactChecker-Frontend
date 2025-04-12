@@ -1,7 +1,15 @@
-import React from "react";
+import { FC  } from "react";
+import { useNavigate } from "react-router-dom";
 import FactCheckCard from "../Components/FactCheck/FactCheckCard";
+import { FaArrowLeft} from "react-icons/fa";
+import hero from "../assets/herobg.png";
 
-const FactCheckDatabase: React.FC = () => {
+interface CheckDetailsProps {
+  onBack?: () => void; 
+}
+
+export const FactCheckDatabase: FC<CheckDetailsProps> = ({ onBack }) => {
+  const navigate = useNavigate();
   const facts = [
     {
       user: "Divine",
@@ -17,17 +25,37 @@ const FactCheckDatabase: React.FC = () => {
     },
   ];
 
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate(-1);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black px-4 py-8 text-white">
-      <h1 className="text-2xl font-semibold mb-6">Fact check database</h1>
-      <button className="text-blue-300 hover:underline mb-6">← Back</button>
-      <div className="flex flex-col items-center">
+    <div className="flex items-center justify-center">
+       <div
+        className="absolute inset-0 bg-cover bg-center "
+        style={{ backgroundImage: `url(${hero})` }}
+      />
+      <div className="absolute inset-0 bg-[#121858]/80" />
+      <div className="min-h-screen bg-gradient-to-b max-w-7xl  px-4 py-8 container ">
+        <div
+          className="flex items-center absolute text-white gap-2 cursor-pointer mb-6 md:mb-[70px] hover:text-gray-200"
+          onClick={handleBack}
+        >
+          <FaArrowLeft />
+          <span>Back</span>
+        </div>
+      <div className="flex flex-col items-center mt-36">
         {facts.map((fact, index) => (
           <FactCheckCard key={index} {...fact} />
         ))}
       </div>
+      </div>
+      
     </div>
   );
 };
 
-export default FactCheckDatabase;

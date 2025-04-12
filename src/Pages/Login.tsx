@@ -3,8 +3,14 @@ import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../Redux/store";
-import { loginUser } from "../Redux/authslice";
+import { loginUser } from "../Redux/authSlice";
 import logo from "../assets/Asset 1@4x 1.png";
+
+interface LoginErrors {
+  email?: string;
+  password?: string;
+  general?: string; 
+}
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -14,7 +20,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<LoginErrors>({}); 
   const [focusedInput, setFocusedInput] = useState<null | string>(null);
 
   const handleBack = () => {
@@ -29,13 +35,15 @@ export const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrors({}); // Clear previous errors
 
     try {
       const resultAction = await dispatch(loginUser({ email, password }));
+
       if (loginUser.fulfilled.match(resultAction)) {
-        navigate("/dashboard");
-      } else {
-        setErrors({ password: resultAction.payload as string });
+        navigate("/");
+      } else if (loginUser.rejected.match(resultAction)) {
+        setErrors({ general: resultAction.payload as string });
       }
     } finally {
       setIsLoading(false);
@@ -108,6 +116,9 @@ export const Login = () => {
             </div>
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+            {errors.general && ( // Display the general error message
+              <p className="text-red-500 text-sm mt-1">{errors.general}</p>
             )}
 
             <button
