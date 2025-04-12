@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { Navbar } from "./Components/Navbar/Navbar";
-import { CheckDetail, FactCheck, Login, Signup, FactCheckDatabase } from "./Pages";
+import { CheckDetail, FactCheck, Login, Signup, FactCheckDatabase, Trending } from "./Pages";
 
 
 function App() {
@@ -19,7 +19,9 @@ function App() {
                 <FactCheckDatabase />
               </div>
             }
+            
           />
+          <Route path="/trending" element={<div><Trending /></div>} />
           <Route path="/signup" element={<div> <Signup/></div>} />
           <Route path="/login" element={<div> <Login/></div>} />
         </Routes>
