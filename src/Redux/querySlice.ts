@@ -2,65 +2,56 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export interface QueryResponse {
-    userId: string;
-    text: string; // this is the main query text
-    verdictFromApi: Verdict[];
-    // ...
-  }
-  
-  export interface Verdict {
-    verdict: 'positive' | 'negative' | 'neutral' | 'unverified';
-    summary: {
-      positive: number;
-      negative: number;
-      neutral: number;
-      unverified: number;
-    };
-    claims: Claim[];
-  }
-  
-  export interface Claim {
-    text: string;
-    claimant?: string;
-    claimDate?: string;
-    claimReview: ClaimReview[];
-  }
-  
-  export interface ClaimReview {
-    publisher: {
-      name: string;
-      site: string;
-    };
-    url: string;
-    title: string;
-    reviewDate: string;
-    textualRating: string;
-    languageCode: string;
-  }
+  userId: string;
+  text: string;
+  verdictFromApi: Verdict[];
+}
+
+export interface Verdict {
+  verdict: 'positive' | 'negative' | 'neutral' | 'unverified';
+  summary: {
+    positive: number;
+    negative: number;
+    neutral: number;
+    unverified: number;
+  };
+  claims: Claim[];
+}
+
+export interface Claim {
+  text: string;
+  claimant?: string;
+  claimDate?: string;
+  claimReview: ClaimReview[];
+}
+
+export interface ClaimReview {
+  publisher: {
+    name: string;
+    site: string;
+  };
+  url: string;
+  title: string;
+  reviewDate: string;
+  textualRating: string;
+  languageCode: string;
+}
+
 interface QueryState {
   data: QueryResponse | null;
+  allQueries: QueryResponse[]; // <-- NEW
   loading: boolean;
   error: string | null;
 }
 
 const initialState: QueryState = {
   data: null,
+  allQueries: [], // <-- NEW
   loading: false,
   error: null,
 };
 
-export const fetchQueries = createAsyncThunk(
-  'query/fetchQueries',
-  async (_, thunkAPI) => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/queries`);
-      return response.data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error?.response?.data?.message || 'Failed to fetch queries');
-    }
-  }
-);
-
+// ✅ POST a single query (authenticated)
 export const postQuery = createAsyncThunk(
   'query/postQuery',
   async (payload: { text: string }, thunkAPI) => {
@@ -77,9 +68,22 @@ export const postQuery = createAsyncThunk(
           },
         }
       );
-      return response.data;
+      return response.data as QueryResponse;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error?.response?.data?.message || 'Failed to post query');
+    }
+  }
+);
+
+// ✅ GET all queries (no auth required)
+export const fetchAllQueries = createAsyncThunk(
+  'query/fetchAllQueries',
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/queries`);
+      return response.data as QueryResponse[];
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error?.response?.data?.message || 'Failed to fetch queries');
     }
   }
 );
@@ -90,25 +94,14 @@ const querySlice = createSlice({
   reducers: {
     clearQueryState(state) {
       state.data = null;
-      state.loading = false;
       state.error = null;
+      state.loading = false;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchQueries.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchQueries.fulfilled, (state, action: PayloadAction<QueryResponse>) => {
-        state.loading = false;
-        state.data = action.payload;
-      })
-      .addCase(fetchQueries.rejected, (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
 
+      // 🔹 POST Query
       .addCase(postQuery.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -118,6 +111,20 @@ const querySlice = createSlice({
         state.data = action.payload;
       })
       .addCase(postQuery.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // 🔹 FETCH All Queries
+      .addCase(fetchAllQueries.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllQueries.fulfilled, (state, action: PayloadAction<QueryResponse[]>) => {
+        state.loading = false;
+        state.allQueries = action.payload;
+      })
+      .addCase(fetchAllQueries.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload;
       });
