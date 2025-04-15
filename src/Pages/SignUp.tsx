@@ -1,26 +1,31 @@
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../Redux/store";
+import { registerUser } from "../Redux/authSlice";
 import logo from "../assets/Asset 1@4x 1.png";
 
-interface SignupFormErrors {
+interface SignupErrors {
+  username?: string;
   email?: string;
-  userName?: string;
   password?: string;
+  general?: string;
 }
 
 export const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const [email, setEmail] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errors, setErrors] = useState<SignupFormErrors>({});
-  const [focusedInput, setFocusedInput] = useState<null | keyof SignupFormErrors>(null);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<SignupErrors>({});
+  const [focusedInput, setFocusedInput] = useState<null | string>(null);
 
-  const handleBack = (): void => {
+  const handleBack = () => {
     const currentPath = location.pathname;
     if (currentPath === "/signup" || currentPath === "/login") {
       navigate("/");
@@ -29,44 +34,30 @@ export const Signup = () => {
     }
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    const newErrors: SignupFormErrors = {};
-    if (!email.includes("@")) newErrors.email = "Invalid email format";
-    if (userName.trim().length < 3) newErrors.userName = "Username must be at least 3 characters";
-    if (password.length < 6) newErrors.password = "Password must be at least 6 characters";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setIsLoading(false);
-      return;
-    }
+    setErrors({});
 
     try {
-      console.log({ email, userName, password });
-    } catch (error) {
-      console.error("Signup failed", error);
+      const resultAction = await dispatch(registerUser({ username, email, password }));
+
+      if (registerUser.fulfilled.match(resultAction)) {
+        navigate("/");
+      } else if (registerUser.rejected.match(resultAction)) {
+        setErrors({ general: resultAction.payload as string });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleFocus = (field: keyof SignupFormErrors): void => setFocusedInput(field);
-  const handleBlur = (): void => setFocusedInput(null);
+  const handleFocus = (field: string) => setFocusedInput(field);
+  const handleBlur = () => setFocusedInput(null);
 
   const switchToLogin = () => navigate("/login");
 
-  const handleChange = (
-    field: keyof SignupFormErrors,
-    setter: React.Dispatch<React.SetStateAction<string>>
-  ) => (e: ChangeEvent<HTMLInputElement>) => {
-    setter(e.target.value);
-    setErrors((prev) => ({ ...prev, [field]: "" }));
-  };
-
-  const inputClass = (field: keyof SignupFormErrors): string =>
+  const inputClass = (field: string) =>
     `border rounded-lg p-3 mt-4 w-80 transition-colors ${
       focusedInput === field ? "border-blue-500" : "border-[#00008B]"
     }`;
@@ -75,7 +66,7 @@ export const Signup = () => {
     <div className="flex justify-center">
       <div className="flex flex-col container h-screen w-screen text-black cursor-default max-w-7xl mx-auto px-4 py-3">
         <div
-          className="flex absolute top-4 items-center gap-2 cursor-pointer text-[#181D6B]"
+          className="flex absolute top-4 items-center gap-2 cursor-pointer mb-6 md:mb-[70px] text-[#181D6B]"
           onClick={handleBack}
         >
           <FaArrowLeft className="hidden md:block" />
@@ -96,31 +87,43 @@ export const Signup = () => {
               <p className="text-[#181D6B] text-[22px] font-bold">Sign Up</p>
             </div>
 
+            <div className={inputClass("username")}>
+              <input
+                type="text"
+                value={username}
+                onFocus={() => handleFocus("username")}
+                onBlur={handleBlur}
+                onChange={(e) => {
+                  setUsername(e.target.value);
+                  setErrors((prev) => ({ ...prev, username: "" }));
+                }}
+                className="w-full outline-none bg-transparent text-black"
+                placeholder="Username"
+                required
+              />
+            </div>
+            {errors.username && (
+              <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+            )}
+
             <div className={inputClass("email")}>
               <input
                 type="email"
                 value={email}
                 onFocus={() => handleFocus("email")}
                 onBlur={handleBlur}
-                onChange={handleChange("email", setEmail)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrors((prev) => ({ ...prev, email: "" }));
+                }}
                 className="w-full outline-none bg-transparent text-black"
                 placeholder="Email"
+                required
               />
             </div>
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
-
-            <div className={inputClass("userName")}>
-              <input
-                type="text"
-                value={userName}
-                onFocus={() => handleFocus("userName")}
-                onBlur={handleBlur}
-                onChange={handleChange("userName", setUserName)}
-                className="w-full outline-none bg-transparent text-black"
-                placeholder="Username"
-              />
-            </div>
-            {errors.userName && <p className="text-red-500 text-sm">{errors.userName}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
 
             <div className={inputClass("password")}>
               <input
@@ -128,12 +131,21 @@ export const Signup = () => {
                 value={password}
                 onFocus={() => handleFocus("password")}
                 onBlur={handleBlur}
-                onChange={handleChange("password", setPassword)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setErrors((prev) => ({ ...prev, password: "" }));
+                }}
                 className="w-full outline-none bg-transparent text-black"
                 placeholder="Password"
+                required
               />
             </div>
-            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+            )}
+            {errors.general && (
+              <p className="text-red-500 text-sm mt-1">{errors.general}</p>
+            )}
 
             <button
               type="submit"
@@ -142,7 +154,7 @@ export const Signup = () => {
               }`}
               disabled={isLoading}
             >
-              {isLoading ? "Loading..." : "Continue"}
+              {isLoading ? "Creating Account..." : "Sign Up"}
             </button>
 
             <div className="flex gap-1 w-full pt-4">

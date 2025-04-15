@@ -1,6 +1,4 @@
 
-
-
 import { useState, useEffect, FormEvent } from "react";
 import { FaLink } from "react-icons/fa";
 import hero from "../../assets/herobg.png";
@@ -8,6 +6,8 @@ import AnalyzingModal from "../Modals/AnalysingModal";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../Hooks/useTypedSelector";
 import { postQuery } from "../../Redux/querySlice";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
 
 const HeroSection = () => {
   const [text, setText] = useState("");
@@ -17,6 +17,8 @@ const HeroSection = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.auth.user);
+
 
   // Progress animation for modal
   useEffect(() => {
@@ -44,25 +46,31 @@ const HeroSection = () => {
 
   const handleCheck = async (e: FormEvent) => {
     e.preventDefault();
+  
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+  
     if (!text.trim() || isChecking) return;
-
+  
     setShowModal(true);
     setIsChecking(true);
     setProgress(0);
-
+  
     const startTime = Date.now();
-
+  
     try {
       const result = await dispatch(postQuery({ text })).unwrap();
-      console.log("✅ Query Response:", result);
+      console.log("Query Response:", result);
     } catch (err) {
-      console.error("❌ Error posting query:", err);
+      console.error("Error posting query:", err);
     } finally {
       const endTime = Date.now();
       const apiDuration = endTime - startTime;
       const extraDelay = 1000;
       const remainingTime = Math.max(0, 4000 - apiDuration);
-
+  
       setTimeout(() => {
         setShowModal(false);
         setIsChecking(false);

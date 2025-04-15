@@ -12,6 +12,7 @@ const initialState: AuthState = {
   error: null,
 };
 
+// LOGIN THUNK
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials: { email: string; password: string }, thunkAPI) => {
@@ -30,6 +31,33 @@ export const loginUser = createAsyncThunk(
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error?.response?.data?.message || 'Login failed'
+      );
+    }
+  }
+);
+
+// SIGNUP THUNK
+export const registerUser = createAsyncThunk(
+  'auth/registerUser',
+  async (
+    newUser: { username: string; email: string; password: string },
+    thunkAPI
+  ) => {
+    thunkAPI.dispatch(loginStart());
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/signup`,
+        newUser
+      );
+
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('token', response.data.token);
+
+      return response.data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message || 'Registration failed'
       );
     }
   }
@@ -65,6 +93,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // login reducers
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -73,11 +102,23 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = action.payload.user;
         state.token = action.payload.token;
-
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('token', action.payload.token);
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      // signup reducers
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
