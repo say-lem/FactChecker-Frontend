@@ -2,8 +2,10 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import logo from "../assets/Asset 1@4x 1.png";
 import hero from "../assets/herobg.png";
+// import { useNavigate, useLocation } from "react-router-dom";
 import { LuThumbsUp, LuThumbsDown } from "react-icons/lu";
 import { FaRegCommentDots, FaPlus } from "react-icons/fa6";
+// import { FaArrowLeft } from "react-icons/fa";
 
 const mainQuery = {
   user: "JohnDoe",
@@ -20,6 +22,7 @@ type Comment = {
     time: string;
     description: string;
   };
+  
 
 const dummyComments:Comment[] = [
     {
@@ -73,6 +76,18 @@ export const QueryDetails = () => {
     // Fetch the query details using the id
     console.log("Query ID:", id);
   }, [id]);
+
+  // const navigate = useNavigate();
+  // const location = useLocation();
+
+  // const handleBack = () => {
+  //   const currentPath = location.pathname;
+  //   if (currentPath === "/signup" || currentPath === "/login") {
+  //     navigate("/");
+  //   } else {
+  //     navigate(-1);
+  //   }
+  // };
 
   return (
     <div className="flex justify-center h-[calc(100vh-64px)] overflow-hidden">
